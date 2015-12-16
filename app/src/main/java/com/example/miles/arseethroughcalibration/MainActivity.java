@@ -25,13 +25,15 @@ public class MainActivity extends ARActivity {
     private SeekBar angleSeekBar;
 
     private boolean GL_TRANSLUCENT = true;
-    public static int CALI_STATE = 0;
+    public int CALI_STATE = 0;
 
     public static float[] firstMatrix;
     public static float[] secondMatrix;
     public static float[] resultMatrix;
-    //TODO: SeekBar adjust
+
     public static float viewAngle = 15.0f;
+    public float viewDistance = 500.0f;
+    public static boolean calibrateTF = false;
 
     int width;
     int height;
@@ -85,7 +87,6 @@ public class MainActivity extends ARActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
@@ -122,6 +123,7 @@ public class MainActivity extends ARActivity {
                 case 0: {
                     setFirstMatrix(15);
                     Log.e("get firstMatrix", "get: " + firstMatrix[0]);
+                    calibrateTF = false;
                 }
                 break;
 
@@ -133,6 +135,7 @@ public class MainActivity extends ARActivity {
                     resultMatrix = new float[16];
                     Matrix.multiplyMM(resultMatrix, 0, firstMatrix, 0, temp, 0);
                     firstMatrix = new float[0];
+                    calibrateTF = true;
                 }
                 break;
             }
@@ -143,8 +146,8 @@ public class MainActivity extends ARActivity {
     private void setFirstMatrix(float angle) {
         firstMatrix = new float[16];
         Matrix.setIdentityM(firstMatrix, 0);
-        float l = (float) (500*Math.tan(15.0/180*Math.PI));
-        Matrix.translateM(firstMatrix, 0, 0, 0, (float) (-500.0 + (l / Math.tan(15.0f / 180.0 * Math.PI)) - (l / Math.tan(angle / 180.0 * Math.PI))));
+        float l = (float) (viewDistance * Math.tan(15.0 / 180 * Math.PI));
+        Matrix.translateM(firstMatrix, 0, 0, 0, (float) (-viewDistance + (l / Math.tan(15.0f / 180.0 * Math.PI)) - (l / Math.tan(angle / 180.0 * Math.PI))));
         Matrix.rotateM(firstMatrix, 0, 20, 1, 0, 0);
     }
 }

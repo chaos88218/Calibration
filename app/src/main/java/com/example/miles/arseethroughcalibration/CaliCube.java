@@ -23,52 +23,52 @@ public class CaliCube {
     final float[] cubePositionData =
             {
                     // Front face
-                    -sl, sl, sh,
-                    -sl, -sl, sh,
-                    sl, sl, sh,
-                    -sl, -sl, sh,
-                    sl, -sl, sh,
-                    sl, sl, sh,
+                    -sl, sl, sh-sh,
+                    -sl, -sl, sh-sh,
+                    sl, sl, sh-sh,
+                    -sl, -sl, sh-sh,
+                    sl, -sl, sh-sh,
+                    sl, sl, sh-sh,
 
                     // Right face
-                    sl, sl, sh,
-                    sl, -sl, sh,
-                    sl, sl, -sh,
-                    sl, -sl, sh,
-                    sl, -sl, -sh,
-                    sl, sl, -sh,
+                    sl, sl, sh-sh,
+                    sl, -sl, sh-sh,
+                    sl, sl, -sh-sh,
+                    sl, -sl, sh-sh,
+                    sl, -sl, -sh-sh,
+                    sl, sl, -sh-sh,
 
                     // Back face
-                    sl, sl, -sh,
-                    sl, -sl, -sh,
-                    -sl, sl, -sh,
-                    sl, -sl, -sh,
-                    -sl, -sl, -sh,
-                    -sl, sl, -sh,
+                    sl, sl, -sh-sh,
+                    sl, -sl, -sh-sh,
+                    -sl, sl, -sh-sh,
+                    sl, -sl, -sh-sh,
+                    -sl, -sl, -sh-sh,
+                    -sl, sl, -sh-sh,
 
                     // Left face
-                    -sl, sl, -sh,
-                    -sl, -sl, -sh,
-                    -sl, sl, sh,
-                    -sl, -sl, -sh,
-                    -sl, -sl, sh,
-                    -sl, sl, sh,
+                    -sl, sl, -sh-sh,
+                    -sl, -sl, -sh-sh,
+                    -sl, sl, sh-sh,
+                    -sl, -sl, -sh-sh,
+                    -sl, -sl, sh-sh,
+                    -sl, sl, sh-sh,
 
                     // Top face
-                    -sl, sl, -sh,
-                    -sl, sl, sh,
-                    sl, sl, -sh,
-                    -sl, sl, sh,
-                    sl, sl, sh,
-                    sl, sl, -sh,
+                    -sl, sl, -sh-sh,
+                    -sl, sl, sh-sh,
+                    sl, sl, -sh-sh,
+                    -sl, sl, sh-sh,
+                    sl, sl, sh-sh,
+                    sl, sl, -sh-sh,
 
                     // Bottom face
-                    sl, -sl, -sh,
-                    sl, -sl, sh,
-                    -sl, -sl, -sh,
-                    sl, -sl, sh,
-                    -sl, -sl, sh,
-                    -sl, -sl, -sh,
+                    sl, -sl, -sh-sh,
+                    sl, -sl, sh-sh,
+                    -sl, -sl, -sh-sh,
+                    sl, -sl, sh-sh,
+                    -sl, -sl, sh-sh,
+                    -sl, -sl, -sh-sh,
             };
 
     float[] color1 = new float[]{0.0f, 0.5f, 0.5f};
