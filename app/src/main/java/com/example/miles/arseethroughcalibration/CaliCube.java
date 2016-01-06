@@ -13,8 +13,8 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class CaliCube {
 
-    private float sl = 45/2f;
-    private float sh = 75/2f;
+    private float sl = 80/2f;
+    private float sh = 80/2f;
 
     private FloatBuffer vertexBuffer;
     private FloatBuffer colorBuffer;
@@ -23,52 +23,52 @@ public class CaliCube {
     final float[] cubePositionData =
             {
                     // Front face
-                    -sl, sl, sh-sh,
-                    -sl, -sl, sh-sh,
-                    sl, sl, sh-sh,
-                    -sl, -sl, sh-sh,
-                    sl, -sl, sh-sh,
-                    sl, sl, sh-sh,
+                    -sl, sl, sh+sh,
+                    -sl, -sl, sh+sh,
+                    sl, sl, sh+sh,
+                    -sl, -sl, sh+sh,
+                    sl, -sl, sh+sh,
+                    sl, sl, sh+sh,
 
                     // Right face
-                    sl, sl, sh-sh,
-                    sl, -sl, sh-sh,
-                    sl, sl, -sh-sh,
-                    sl, -sl, sh-sh,
-                    sl, -sl, -sh-sh,
-                    sl, sl, -sh-sh,
+                    sl, sl, sh+sh,
+                    sl, -sl, sh+sh,
+                    sl, sl, -sh+sh,
+                    sl, -sl, sh+sh,
+                    sl, -sl, -sh+sh,
+                    sl, sl, -sh+sh,
 
                     // Back face
-                    sl, sl, -sh-sh,
-                    sl, -sl, -sh-sh,
-                    -sl, sl, -sh-sh,
-                    sl, -sl, -sh-sh,
-                    -sl, -sl, -sh-sh,
-                    -sl, sl, -sh-sh,
+                    sl, sl, -sh+sh,
+                    sl, -sl, -sh+sh,
+                    -sl, sl, -sh+sh,
+                    sl, -sl, -sh+sh,
+                    -sl, -sl, -sh+sh,
+                    -sl, sl, -sh+sh,
 
                     // Left face
-                    -sl, sl, -sh-sh,
-                    -sl, -sl, -sh-sh,
-                    -sl, sl, sh-sh,
-                    -sl, -sl, -sh-sh,
-                    -sl, -sl, sh-sh,
-                    -sl, sl, sh-sh,
+                    -sl, sl, -sh+sh,
+                    -sl, -sl, -sh+sh,
+                    -sl, sl, sh+sh,
+                    -sl, -sl, -sh+sh,
+                    -sl, -sl, sh+sh,
+                    -sl, sl, sh+sh,
 
                     // Top face
-                    -sl, sl, -sh-sh,
-                    -sl, sl, sh-sh,
-                    sl, sl, -sh-sh,
-                    -sl, sl, sh-sh,
-                    sl, sl, sh-sh,
-                    sl, sl, -sh-sh,
+                    -sl, sl, -sh+sh,
+                    -sl, sl, sh+sh,
+                    sl, sl, -sh+sh,
+                    -sl, sl, sh+sh,
+                    sl, sl, sh+sh,
+                    sl, sl, -sh+sh,
 
                     // Bottom face
-                    sl, -sl, -sh-sh,
-                    sl, -sl, sh-sh,
-                    -sl, -sl, -sh-sh,
-                    sl, -sl, sh-sh,
-                    -sl, -sl, sh-sh,
-                    -sl, -sl, -sh-sh,
+                    sl, -sl, -sh+sh,
+                    sl, -sl, sh+sh,
+                    -sl, -sl, -sh+sh,
+                    sl, -sl, sh+sh,
+                    -sl, -sl, sh+sh,
+                    -sl, -sl, -sh+sh,
             };
 
     float[] color1 = new float[]{0.0f, 0.5f, 0.5f};

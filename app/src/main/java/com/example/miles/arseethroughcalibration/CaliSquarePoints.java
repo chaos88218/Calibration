@@ -16,10 +16,10 @@ public class CaliSquarePoints {
     private FloatBuffer colorBuffer;
 
     private float[] squareCoords = new float[]{
-            45/2f, 45/2f, 0,
-            -45/2f, 45/2f, 0,
-            -45/2f, -45/2f, 0,
-            45/2f, -45/2f, 0
+            40f, 40f, 0,
+            -40f, 40f, 0,
+            -40f, -40f, 0,
+            40f, -40f, 0
     };
     private float color[] = new float[]{
             1, 0, 0, 1,
