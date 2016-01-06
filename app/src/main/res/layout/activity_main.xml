@@ -32,6 +32,17 @@
         android:layout_alignParentEnd="true"
         android:onClick="ca" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Para."
+        android:id="@+id/button2"
+        android:layout_above="@+id/button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/angleSeekBar"
+        android:layout_toEndOf="@+id/angleSeekBar"/>
+
     <SeekBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

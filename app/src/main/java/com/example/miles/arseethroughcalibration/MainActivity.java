@@ -18,11 +18,16 @@ import org.artoolkit.ar.base.ARActivity;
 import org.artoolkit.ar.base.ARToolKit;
 import org.artoolkit.ar.base.rendering.ARRenderer;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
 public class MainActivity extends ARActivity {
 
     private FrameLayout aRlayout;
     private RelativeLayout aRParentLayout;
-    private Button button;
+    private Button caliButton, saveParaButton;
     private SeekBar angleSeekBar;
     private TextView textView;
 
@@ -46,7 +51,8 @@ public class MainActivity extends ARActivity {
 
         aRlayout = (FrameLayout) findViewById(R.id.ARLayout);
         aRParentLayout = (RelativeLayout) findViewById(R.id.ARParentLayout);
-        button = (Button) findViewById(R.id.button);
+        caliButton = (Button) findViewById(R.id.button);
+        saveParaButton = (Button) findViewById(R.id.button2);
         angleSeekBar = (SeekBar) findViewById(R.id.angleSeekBar);
         textView = (TextView) findViewById(R.id.textView);
         angleSeekBar.setVisibility(View.GONE);
@@ -70,10 +76,17 @@ public class MainActivity extends ARActivity {
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
+        caliButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 calibration();
+            }
+        });
+
+        saveParaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                writeParaFile();
             }
         });
 
@@ -163,6 +176,36 @@ public class MainActivity extends ARActivity {
             }
             CALI_STATE = (CALI_STATE + 1) % 5;
         }
+    }
 
+    protected void writeParaFile() {
+        if (calibrateTF) {
+            try {
+                File file = new File("/sdcard/calipara.txt");
+                boolean aa = file.createNewFile();
+                String str = "";
+
+                str = str + viewAngle+"\n";
+                for (int i = 0; i<16; i++){
+                    str += (resultMatrix[i]+"\t");
+                }
+
+                FileOutputStream fout = new FileOutputStream(file);
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fout);
+                outputStreamWriter.write(str);
+                outputStreamWriter.close();
+                fout.close();
+
+                if(aa){
+                    Toast.makeText(saveParaButton.getContext(), "Saved.", Toast.LENGTH_SHORT).show();
+                }
+
+            } catch (IOException e) {
+                Log.e("Writing files", e + "");
+                Toast.makeText(saveParaButton.getContext(), "Saving Wrong.", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Toast.makeText(saveParaButton.getContext(), "Not Yet.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

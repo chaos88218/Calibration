@@ -51,10 +51,6 @@ public class SimpleRenderer extends ARRenderer {
         gl.glLoadMatrixf(ARToolKit.getInstance().getProjectionMatrix(), 0);
         gl.glLoadIdentity();
         GLU.gluPerspective(gl, MainActivity.viewAngle, rate, 0.1f, 1000000.0f);
-        float GLDRW = (float) (2.0f * 0.1 * Math.tan(MainActivity.viewAngle / 2.0 / 180.0 * Math.PI) * 4.0f / 3.0f);
-        float WOTRW = (float) (10.668 / Math.sqrt(337) * 16.0f);
-        drawingScale = WOTRW / GLDRW;
-
 
         gl.glEnable(GL10.GL_CULL_FACE);
         gl.glShadeModel(GL10.GL_SMOOTH);
@@ -67,14 +63,15 @@ public class SimpleRenderer extends ARRenderer {
         if (ARToolKit.getInstance().queryMarkerVisible(markerID)) {
 
             if (!MainActivity.calibrateTF) {
-                gl.glPushMatrix();
                 gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
-                //gl.glScalef(drawingScale, drawingScale, drawingScale);
                 caliSquarePoints.draw(gl);
                 caliLine.draw(gl);
-                gl.glPopMatrix();
             }
             if (MainActivity.calibrateTF) {
+                gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
+                caliSquarePoints.draw(gl);
+                caliLine.draw(gl);
+
                 gl.glLoadIdentity();
                 gl.glMultMatrixf(MainActivity.resultMatrix, 0);
                 gl.glMultMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
