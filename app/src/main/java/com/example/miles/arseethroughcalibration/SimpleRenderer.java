@@ -20,6 +20,12 @@ public class SimpleRenderer extends ARRenderer {
     private float rate;
     private float drawingScale;
 
+    private float HECDMatrix[] = new float[]{
+            -0.6390f, -0.7177f, 0.2767f, 0,
+            -0.4724f, -0.6500f, -0.5952f, 0,
+            0.6071f, -0.2496f, 0.7544f, 0,
+            6.9699f, 0, 55.3345f, 1.0000f};
+
     /**
      * Markers can be configured here.
      */
@@ -61,24 +67,62 @@ public class SimpleRenderer extends ARRenderer {
 
         // If the marker is visible, apply its transformation, and draw a cube
         if (ARToolKit.getInstance().queryMarkerVisible(markerID)) {
+            gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
+            gl.glMultMatrixf(HECDMatrix, 0);
+            caliSquarePoints.draw(gl);
 
-            if (!MainActivity.calibrateTF) {
-                gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
-                caliSquarePoints.draw(gl);
-                caliLine.draw(gl);
-            }
-            if (MainActivity.calibrateTF) {
-                gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
-                caliSquarePoints.draw(gl);
-                caliLine.draw(gl);
+//            gl.glLoadMatrixf(HECDMatrix, 0);
+//            gl.glMultMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
+//            caliSquarePoints.draw(gl);
 
-                gl.glLoadIdentity();
-                gl.glMultMatrixf(MainActivity.resultMatrix, 0);
-                gl.glMultMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
-                caliCube.draw(gl);
-            } else if (MainActivity.firstMatrix != null) {
-                gl.glLoadMatrixf(MainActivity.firstMatrix, 0);
-                caliSquarePoints.draw(gl);
+            switch (MainActivity.CALI_STATE) {
+                //**angle**//
+                case 0: {
+                    gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
+                    caliSquarePoints.draw(gl);
+                    caliLine.draw(gl);
+                }
+                break;
+
+                case 1: {
+                    gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
+                    caliSquarePoints.draw(gl);
+                    caliLine.draw(gl);
+                }
+                break;
+                //**angle**//
+
+                //**Matrix**//
+                case 2: {
+                    gl.glLoadIdentity();
+                    gl.glTranslatef(20, 0, -800);
+                    gl.glRotatef(45, 0, 1, 0);
+                    caliSquarePoints.draw(gl);
+
+                }
+                break;
+
+                case 3: {
+                    gl.glLoadIdentity();
+                    gl.glTranslatef(-20, 0, -800);
+                    gl.glRotatef(-45, 0, 1, 0);
+                    caliSquarePoints.draw(gl);
+                }
+                break;
+
+                case 4: {
+                    gl.glLoadIdentity();
+                    gl.glTranslatef(0, 0, -800);
+                    //gl.glRotatef(-45, 1, 0, 0);
+                    caliSquarePoints.draw(gl);
+                }
+                break;
+                //**Matrix**//
+
+                case 5: {
+
+                }
+                break;
             }
         }
 

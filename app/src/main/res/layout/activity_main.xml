@@ -53,7 +53,7 @@
         android:layout_toLeftOf="@+id/button"
         android:layout_toStartOf="@+id/button"
         android:max="500"
-        android:progress="450"
+        android:progress="92"
         android:indeterminate="false"
         android:padding="16dp" />
 

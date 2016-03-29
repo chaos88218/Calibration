@@ -32,13 +32,16 @@ public class MainActivity extends ARActivity {
     private TextView textView;
 
     private boolean GL_TRANSLUCENT = true;
-    public int CALI_STATE = 0;                  //0, Angle Adjustment; 1, 1st Matrix; 2 2nd Matrix; 3, cali result;
+    public static int CALI_STATE = 0;                  //0, Angle Adjustment; 1, 1st Matrix; 2 2nd Matrix; 3, cali result;
 
     public static float[] firstMatrix;
     public static float[] secondMatrix;
-    public static float[] resultMatrix;
+    public static float[] thirdMatrix;
 
-    public static float viewAngle = 45.0f;
+    public static float[] resultMatrix1;
+    public static float[] resultMatrix2;
+
+    public static float viewAngle = 9.2f;
     public static boolean calibrateTF = false;
 
     int width;
@@ -134,7 +137,15 @@ public class MainActivity extends ARActivity {
     protected void calibration() {
         if (ARToolKit.getInstance().queryMarkerVisible(SimpleRenderer.markerID)) {
             switch (CALI_STATE) {
+                //**angle**//
                 case 0: {
+                    firstMatrix = new float[0];
+                    secondMatrix = new float[0];
+                    thirdMatrix = new float[0];
+
+                    resultMatrix1 = new float[0];
+                    resultMatrix2 = new float[0];
+
                     calibrateTF = false;
                     angleSeekBar.setVisibility(View.VISIBLE);
                     textView.setText("State: Adjust Angle.");
@@ -146,13 +157,14 @@ public class MainActivity extends ARActivity {
                     textView.setText("State: Adjust FM.");
                 }
                 break;
+                //**angle**//
 
+                //**Matrix**//
                 case 2: {
                     firstMatrix = new float[16];
                     firstMatrix = ARToolKit.getInstance().queryMarkerTransformation(SimpleRenderer.markerID);
                     Log.e("get firstMatrix", "get: " + firstMatrix[0]);
                     textView.setText("State: Confirm FM. Adjust SM");
-
                 }
                 break;
 
@@ -160,34 +172,72 @@ public class MainActivity extends ARActivity {
                     float[] temp = new float[16];
                     secondMatrix = ARToolKit.getInstance().queryMarkerTransformation(SimpleRenderer.markerID);
                     Log.e("get secondMatrix", "get: " + secondMatrix[0]);
+
                     boolean aaa = Matrix.invertM(temp, 0, secondMatrix, 0);
-                    resultMatrix = new float[16];
-                    Matrix.multiplyMM(resultMatrix, 0, firstMatrix, 0, temp, 0);
-                    firstMatrix = new float[0];
-                    textView.setText("State: Confirm SM _ " + aaa);
+                    resultMatrix1 = new float[16];
+                    Matrix.multiplyMM(resultMatrix1, 0, firstMatrix, 0, temp, 0);
+                    textView.setText("State: Confirm SM. Adjust TM " + aaa);
+
                 }
                 break;
 
                 case 4: {
+                    float[] temp = new float[16];
+                    thirdMatrix = ARToolKit.getInstance().queryMarkerTransformation(SimpleRenderer.markerID);
+                    Log.e("get secondMatrix", "get: " + thirdMatrix[0]);
+
+                    boolean aaa = Matrix.invertM(temp, 0, thirdMatrix, 0);
+                    resultMatrix2 = new float[16];
+                    Matrix.multiplyMM(resultMatrix2, 0, secondMatrix, 0, temp, 0);
+                    textView.setText("State: Confirm TM _ " + aaa);
+                }
+                break;
+                //**Matrix**//
+
+                case 5: {
                     calibrateTF = true;
                     textView.setText("State: Calibration Done");
                 }
                 break;
             }
-            CALI_STATE = (CALI_STATE + 1) % 5;
+            CALI_STATE = (CALI_STATE + 1) % 6;
         }
     }
 
     protected void writeParaFile() {
         if (calibrateTF) {
             try {
-                File file = new File("/sdcard/calipara.txt");
+                int times = 0;
+                File file = new File("/sdcard/HECmatrix.txt");
                 boolean aa = file.createNewFile();
+                while (!aa) {
+                    times++;
+                    file = new File("/sdcard/HECmatrix_" + times + ".txt");
+                    aa = file.createNewFile();
+                }
+                Toast.makeText(caliButton.getContext(), "File Created." + times, Toast.LENGTH_SHORT).show();
+
                 String str = "";
 
-                str = str + viewAngle+"\n";
-                for (int i = 0; i<16; i++){
-                    str += (resultMatrix[i]+"\t");
+                str = str + viewAngle + "\n";
+                for (int i = 0; i < 16; i++) {
+                    str += (firstMatrix[i] + "\t");
+                }
+                str += "\n";
+                for (int i = 0; i < 16; i++) {
+                    str += (secondMatrix[i] + "\t");
+                }
+                str += "\n";
+                for (int i = 0; i < 16; i++) {
+                    str += (thirdMatrix[i] + "\t");
+                }
+                str += "\n";
+                for (int i = 0; i < 16; i++) {
+                    str += (resultMatrix1[i] + "\t");
+                }
+                str += "\n";
+                for (int i = 0; i < 16; i++) {
+                    str += (resultMatrix2[i] + "\t");
                 }
 
                 FileOutputStream fout = new FileOutputStream(file);
@@ -196,15 +246,13 @@ public class MainActivity extends ARActivity {
                 outputStreamWriter.close();
                 fout.close();
 
-                if(aa){
-                    Toast.makeText(saveParaButton.getContext(), "Saved.", Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(caliButton.getContext(), "Saved.", Toast.LENGTH_SHORT).show();
 
             } catch (IOException e) {
                 Log.e("Writing files", e + "");
                 Toast.makeText(saveParaButton.getContext(), "Saving Wrong.", Toast.LENGTH_SHORT).show();
             }
-        }else{
+        } else {
             Toast.makeText(saveParaButton.getContext(), "Not Yet.", Toast.LENGTH_SHORT).show();
         }
     }
