@@ -1,7 +1,6 @@
 package com.example.miles.arseethroughcalibration;
 
 import android.opengl.GLU;
-import android.opengl.Matrix;
 import android.util.Log;
 
 import com.example.miles.arseethroughcalibration.CalibrationDrawing.CaliLine;
@@ -22,9 +21,7 @@ public class SimpleRenderer extends ARRenderer {
     private CaliLine caliLine = new CaliLine();
     private CaliSquarePoints caliSquarePoints = new CaliSquarePoints();
     private CaliSquarePointsDD caliSquarePointsDD = new CaliSquarePointsDD();
-    public static float[] HECMatrix;
     private float rate;
-
 
     /**
      * Markers can be configured here.
@@ -68,52 +65,26 @@ public class SimpleRenderer extends ARRenderer {
         // If the marker is visible, apply its transformation, and draw a cube
         if (ARToolKit.getInstance().queryMarkerVisible(markerID)) {
 
-            //Log.d("GET?", "" + MainActivity.CALI_DONE);
-
-            if (MainActivity.CALI_DONE) {
+            if (!MainActivity.calibrateTF) {
                 gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
-                gl.glMultMatrixf(HECMatrix, 0);
-                caliSquarePointsDD.draw(gl);
+                caliSquarePoints.draw(gl);
+                caliLine.draw(gl);
             }
 
+            if(!MainActivity.gotFM)
+            {
+                gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
+                caliSquarePoints.draw(gl);
+                caliLine.draw(gl);
+            }
 
-            switch (MainActivity.CALI_STATE) {
-                //**angle**//
-                case 0: {
-
-                }
-                break;
-
-                case 1: {
-                    gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
-                    caliSquarePoints.draw(gl);
-                    caliLine.draw(gl);
-                }
-                break;
-                //**angle**//
-
-                //**Matrix**//
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                case 9:
-                case 10:
-                case 11: {
-                    float[] temp = new float[16];
-                    Matrix.transposeM(temp, 0, MainActivity.Base[MainActivity.CALI_STATE - 2], 0);
-                    gl.glLoadMatrixf(temp, 0);
-                    caliSquarePoints.draw(gl);
-                }
-                break;
-                //**Matrix**//
-
-                case 12: {
-                }
-                break;
+            if (MainActivity.calibrateTF) {
+                gl.glLoadMatrixf(MainActivity.resultMatrix, 0);
+                gl.glMultMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
+                caliSquarePointsDD.draw(gl);
+            } else if (MainActivity.firstMatrix != null) {
+                gl.glLoadMatrixf(MainActivity.firstMatrix, 0);
+                caliSquarePoints.draw(gl);
             }
         }
 
