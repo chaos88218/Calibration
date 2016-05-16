@@ -2,7 +2,6 @@ package com.example.miles.arseethroughcalibration;
 
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.opengl.Matrix;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -13,6 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.miles.arseethroughcalibration.HEC.HE_Calibrator;
 
 import org.artoolkit.ar.base.ARActivity;
 import org.artoolkit.ar.base.ARToolKit;
@@ -32,14 +33,25 @@ public class MainActivity extends ARActivity {
     private TextView textView;
 
     private boolean GL_TRANSLUCENT = true;
+    public static boolean CALI_DONE;
     public static int CALI_STATE = 0;                  //0, Angle Adjustment; 1, 1st Matrix; 2 2nd Matrix; 3, cali result;
 
-    public static float[] firstMatrix;
-    public static float[] secondMatrix;
-    public static float[] thirdMatrix;
+    public static float[][] Base = new float[][]{
+            {1, 0, 0, 25, 0, 1, 0, 10, 0, 0, 1, -900, 0, 0, 0, 1},
+            {1, 0, 0, -25, 0, 1, 0, 10, 0, 0, 1, -900, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 1, 0, 10, 0, 0, 1, -900, 0, 0, 0, 1},
+            {1, 0, 0, 25, 0, 1, 0, 0, 0, 0, 1, -900, 0, 0, 0, 1},
+            {1, 0, 0, -25, 0, 1, 0, 0, 0, 0, 1, -900, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -900, 0, 0, 0, 1},
+            {1, 0, 0, 25, 0, 1, 0, -10, 0, 0, 1, -900, 0, 0, 0, 1},
+            {1, 0, 0, -25, 0, 1, 0, -10, 0, 0, 1, -900, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 1, 0, -10, 0, 0, 1, -900, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -900, 0, 0, 0, 1},
+    };
 
-    public static float[] resultMatrix1;
-    public static float[] resultMatrix2;
+    private HE_Calibrator he_calibrator = new HE_Calibrator(Base);
+
+    public float[][] cameraMatrix = new float[10][];
 
     public static float viewAngle = 9.2f;
     public static boolean calibrateTF = false;
@@ -139,13 +151,10 @@ public class MainActivity extends ARActivity {
             switch (CALI_STATE) {
                 //**angle**//
                 case 0: {
-                    firstMatrix = new float[0];
-                    secondMatrix = new float[0];
-                    thirdMatrix = new float[0];
 
-                    resultMatrix1 = new float[0];
-                    resultMatrix2 = new float[0];
-
+                    for (int i = 0; i < 16; i++) {
+                        cameraMatrix[0] = new float[0];
+                    }
                     calibrateTF = false;
                     angleSeekBar.setVisibility(View.VISIBLE);
                     textView.setText("State: Adjust Angle.");
@@ -153,6 +162,7 @@ public class MainActivity extends ARActivity {
                 break;
 
                 case 1: {
+                    CALI_DONE = false;
                     angleSeekBar.setVisibility(View.GONE);
                     textView.setText("State: Adjust FM.");
                 }
@@ -160,47 +170,39 @@ public class MainActivity extends ARActivity {
                 //**angle**//
 
                 //**Matrix**//
-                case 2: {
-                    firstMatrix = new float[16];
-                    firstMatrix = ARToolKit.getInstance().queryMarkerTransformation(SimpleRenderer.markerID);
-                    Log.e("get firstMatrix", "get: " + firstMatrix[0]);
-                    textView.setText("State: Confirm FM. Adjust SM");
-                }
-                break;
-
-                case 3: {
-                    float[] temp = new float[16];
-                    secondMatrix = ARToolKit.getInstance().queryMarkerTransformation(SimpleRenderer.markerID);
-                    Log.e("get secondMatrix", "get: " + secondMatrix[0]);
-
-                    boolean aaa = Matrix.invertM(temp, 0, secondMatrix, 0);
-                    resultMatrix1 = new float[16];
-                    Matrix.multiplyMM(resultMatrix1, 0, firstMatrix, 0, temp, 0);
-                    textView.setText("State: Confirm SM. Adjust TM " + aaa);
-
-                }
-                break;
-
-                case 4: {
-                    float[] temp = new float[16];
-                    thirdMatrix = ARToolKit.getInstance().queryMarkerTransformation(SimpleRenderer.markerID);
-                    Log.e("get secondMatrix", "get: " + thirdMatrix[0]);
-
-                    boolean aaa = Matrix.invertM(temp, 0, thirdMatrix, 0);
-                    resultMatrix2 = new float[16];
-                    Matrix.multiplyMM(resultMatrix2, 0, secondMatrix, 0, temp, 0);
-                    textView.setText("State: Confirm TM _ " + aaa);
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                case 11: {
+                    cameraMatrix[CALI_STATE - 2] = new float[16];
+                    cameraMatrix[CALI_STATE - 2] = ARToolKit.getInstance().queryMarkerTransformation(SimpleRenderer.markerID);
+                    Log.e("get " + (CALI_STATE - 2), " Matrix " + (-10 + (MainActivity.CALI_STATE % 3) * 10));
+                    textView.setText("State: Confirm " + (CALI_STATE - 2));
                 }
                 break;
                 //**Matrix**//
 
-                case 5: {
+                case 12: {
+                    he_calibrator.Add_HEC(cameraMatrix);
+                    String str = he_calibrator.Calibration();
                     calibrateTF = true;
-                    textView.setText("State: Calibration Done");
+                    SimpleRenderer.HECMatrix = he_calibrator.getResultMatrixf();
+                    String str2 = SimpleRenderer.HECMatrix[0] + " " + SimpleRenderer.HECMatrix[4] + " " + SimpleRenderer.HECMatrix[8] + " " + SimpleRenderer.HECMatrix[12] + "\n"
+                            + SimpleRenderer.HECMatrix[1] + " " + SimpleRenderer.HECMatrix[5] + " " + SimpleRenderer.HECMatrix[9] + " " + SimpleRenderer.HECMatrix[13] + "\n"
+                            + SimpleRenderer.HECMatrix[2] + " " + SimpleRenderer.HECMatrix[6] + " " + SimpleRenderer.HECMatrix[10] + " " + SimpleRenderer.HECMatrix[14] + "\n"
+                            + SimpleRenderer.HECMatrix[3] + " " + SimpleRenderer.HECMatrix[7] + " " + SimpleRenderer.HECMatrix[11] + " " + SimpleRenderer.HECMatrix[15] + "\n";
+                    textView.setText("State: Calibration Done\n" + str + "\n" + str2);
+                    CALI_DONE = true;
                 }
                 break;
             }
-            CALI_STATE = (CALI_STATE + 1) % 6;
+            CALI_STATE = (CALI_STATE + 1) % 13;
         }
     }
 
@@ -221,24 +223,9 @@ public class MainActivity extends ARActivity {
 
                 str = str + viewAngle + "\n";
                 for (int i = 0; i < 16; i++) {
-                    str += (firstMatrix[i] + "\t");
+                    str += (SimpleRenderer.HECMatrix[i] + "\t");
                 }
-                str += "\n";
-                for (int i = 0; i < 16; i++) {
-                    str += (secondMatrix[i] + "\t");
-                }
-                str += "\n";
-                for (int i = 0; i < 16; i++) {
-                    str += (thirdMatrix[i] + "\t");
-                }
-                str += "\n";
-                for (int i = 0; i < 16; i++) {
-                    str += (resultMatrix1[i] + "\t");
-                }
-                str += "\n";
-                for (int i = 0; i < 16; i++) {
-                    str += (resultMatrix2[i] + "\t");
-                }
+
 
                 FileOutputStream fout = new FileOutputStream(file);
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fout);

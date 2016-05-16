@@ -1,4 +1,4 @@
-package com.example.miles.arseethroughcalibration;
+package com.example.miles.arseethroughcalibration.CalibrationDrawing;
 
 import android.opengl.GLES10;
 

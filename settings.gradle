@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':EJML-core-0.29', ':EJML-dense64-0.29', ':EJML-denseC64-0.29', ':EJML-equation-0.29', ':EJML-simple-0.29'
 include ':aRBaseLib'

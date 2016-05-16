@@ -30,4 +30,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile project(':aRBaseLib')
+    compile project(':EJML-core-0.29')
+    compile project(':EJML-dense64-0.29')
+    compile project(':EJML-denseC64-0.29')
+    compile project(':EJML-equation-0.29')
+    compile project(':EJML-simple-0.29')
 }

@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('EJML-denseC64-0.29.jar'))
