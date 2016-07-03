@@ -140,13 +140,13 @@ public class MainActivity extends ARActivity {
                     gotFM = false;
                     calibrateTF = false;
                     angleSeekBar.setVisibility(View.VISIBLE);
-                    textView.setText("State: Adjust Angle.");
+                    textView.setText("步驟一:\n拉動調整角度\n使兩黃線與兩黑線\n兩兩直線距離一致\n完成按下calibration按鈕");
                 }
                 break;
 
                 case 1: {
                     angleSeekBar.setVisibility(View.GONE);
-                    textView.setText("State: Adjust First Matrix.");
+                    textView.setText("步驟二:\n調整畫面中紅方框位置大小\n使紅方框範圍充滿整個螢幕\n按下calibration按鈕紀錄位置");
                 }
                 break;
 
@@ -154,7 +154,7 @@ public class MainActivity extends ARActivity {
                     firstMatrix = new float[16];
                     firstMatrix = ARToolKit.getInstance().queryMarkerTransformation(SimpleRenderer.markerID);
                     Log.e("get firstMatrix", "get: " + firstMatrix[0]);
-                    textView.setText("State: Confirm First Matrix. Adjust Second Matrix");
+                    textView.setText("步驟三:\n身體相對Marker略往右移\n將上一步驟紀錄的紅框位置\n和實體Marker對齊\n按下calibration按鈕");
                     gotFM = true;
 
                 }
@@ -168,13 +168,13 @@ public class MainActivity extends ARActivity {
                     resultMatrix = new float[16];
                     Matrix.multiplyMM(resultMatrix, 0, firstMatrix, 0, temp, 0);
                     firstMatrix = new float[0];
-                    textView.setText("State: Confirm Second Matrix, " + aaa);
+                    textView.setText("步驟四：\n校正成功與否 :" + aaa + "\n按下calibration按鈕繼續");
                 }
                 break;
 
                 case 4: {
                     calibrateTF = true;
-                    textView.setText("State: Calibration Done" + "\n");
+                    textView.setText("步驟五：可以存檔\n或按下calibration按鈕重新校正" + "\n");
                 }
                 break;
             }

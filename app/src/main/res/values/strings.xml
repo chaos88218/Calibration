@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">AR See Through Calibration</string>
+    <string name="line_wide">狀態 :
+拉動調整角度
+使兩黃線與兩黑線
+兩兩直線距離一致
+完成按下calibration按鈕</string>
 </resources>
