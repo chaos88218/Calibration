@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ARSeeThroughCalibration.iml" filepath="$PROJECT_DIR$/ARSeeThroughCalibration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Calibration.iml" filepath="$PROJECT_DIR$/Calibration.iml" />
       <module fileurl="file://$PROJECT_DIR$/EJML-core-0.29/EJML-core-0.29.iml" filepath="$PROJECT_DIR$/EJML-core-0.29/EJML-core-0.29.iml" />
       <module fileurl="file://$PROJECT_DIR$/EJML-dense64-0.29/EJML-dense64-0.29.iml" filepath="$PROJECT_DIR$/EJML-dense64-0.29/EJML-dense64-0.29.iml" />
       <module fileurl="file://$PROJECT_DIR$/EJML-denseC64-0.29/EJML-denseC64-0.29.iml" filepath="$PROJECT_DIR$/EJML-denseC64-0.29/EJML-denseC64-0.29.iml" />

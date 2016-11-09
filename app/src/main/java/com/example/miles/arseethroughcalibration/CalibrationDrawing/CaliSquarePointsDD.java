@@ -17,9 +17,9 @@ public class CaliSquarePointsDD {
 
     private float[] squareCoords = new float[]{
             40f, 40f, 0,
-            -40f, 40f, 0,
-            -40f, -40f, 0,
-            40f, -40f, 0
+            -20f, 20f, 0,
+            -20f, -20f, 0,
+            20f, -20f, 0
     };
     private float color[] = new float[]{
             1, 1, 0, 1,
@@ -33,17 +33,17 @@ public class CaliSquarePointsDD {
 
     final float[] linePointData =
             {
-                    40, 40, 0f,
-                    -40, 40, 0f,
+                    20, 20, 0f,
+                    -20, 20, 0f,
 
-                    -40, 40, 0f,
-                    -40, -40, 0f,
+                    -20, 20, 0f,
+                    -20, -20, 0f,
 
-                    -40, -40, 0f,
-                    40, -40, 0f,
+                    -20, -20, 0f,
+                    20, -20, 0f,
 
-                    40, -40, 0f,
-                    40, 40, 0f
+                    20, -20, 0f,
+                    20, 20, 0f
             };
 
     final float[] lineColorData =

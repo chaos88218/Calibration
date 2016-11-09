@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="D:\AndroidStudioProjects\ARSeeThroughCalibration\aRBaseLib\src\main\assets"/><source path="D:\AndroidStudioProjects\ARSeeThroughCalibration\aRBaseLib\build\generated\assets\shaders\release"/></dataSet><dataSet config="release"><source path="D:\AndroidStudioProjects\ARSeeThroughCalibration\aRBaseLib\src\release\assets"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="F:\Android project\Calibration\aRBaseLib\src\main\assets"/><source path="F:\Android project\Calibration\aRBaseLib\build\generated\assets\shaders\release"/></dataSet><dataSet config="release"><source path="F:\Android project\Calibration\aRBaseLib\src\release\assets"/></dataSet></merger>
