@@ -10,6 +10,8 @@ import com.example.miles.arseethroughcalibration.CalibrationDrawing.CaliSquarePo
 import org.artoolkit.ar.base.ARToolKit;
 import org.artoolkit.ar.base.rendering.ARRenderer;
 
+import java.util.Arrays;
+
 import javax.microedition.khronos.opengles.GL10;
 
 /**
@@ -53,7 +55,7 @@ public class SimpleRenderer extends ARRenderer {
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadMatrixf(ARToolKit.getInstance().getProjectionMatrix(), 0);
         gl.glLoadIdentity();
-        GLU.gluPerspective(gl, MainActivity.viewAngle, rate, 0.1f, 1000000.0f);
+        GLU.gluPerspective(gl, MainActivity.viewAngle, rate, 0.1f, 10000.0f);
 
         gl.glEnable(GL10.GL_CULL_FACE);
         gl.glShadeModel(GL10.GL_SMOOTH);
@@ -80,6 +82,7 @@ public class SimpleRenderer extends ARRenderer {
 
             if (MainActivity.calibrateTF) {
                 gl.glLoadMatrixf(MainActivity.resultMatrix, 0);
+                Log.d("ARS--", Arrays.toString(MainActivity.resultMatrix));
                 gl.glMultMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
                 caliSquarePointsDD.draw(gl);
             } else if (MainActivity.firstMatrix != null) {

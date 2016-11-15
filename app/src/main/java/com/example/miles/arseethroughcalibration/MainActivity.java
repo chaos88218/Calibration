@@ -68,6 +68,7 @@ public class MainActivity extends ARActivity {
 
         RelativeLayout.LayoutParams ll = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
         ll.setMargins(0, (int) -((height - size.y) / 2.0f), 0, (int) -((height - size.y) / 2.0f));
+        Log.d("Para", " " + (int) -((height - size.y) / 2.0f) + " " +(int) -((height - size.y) / 2.0f));
         aRParentLayout.setLayoutParams(ll);
         //****Full Screen****//
 
