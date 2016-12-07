@@ -53,9 +53,8 @@ public class SimpleRenderer extends ARRenderer {
 
         // Apply the ARToolKit projection matrix
         gl.glMatrixMode(GL10.GL_PROJECTION);
-        gl.glLoadMatrixf(ARToolKit.getInstance().getProjectionMatrix(), 0);
         gl.glLoadIdentity();
-        GLU.gluPerspective(gl, MainActivity.viewAngle, rate, 0.1f, 10000.0f);
+        GLU.gluPerspective(gl, MainActivity.viewAngle, rate, 1f, 10000.0f);
 
         gl.glEnable(GL10.GL_CULL_FACE);
         gl.glShadeModel(GL10.GL_SMOOTH);
