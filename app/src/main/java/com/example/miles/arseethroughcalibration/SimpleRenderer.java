@@ -2,6 +2,7 @@ package com.example.miles.arseethroughcalibration;
 
 import android.opengl.GLU;
 import android.util.Log;
+import android.view.View;
 
 import com.example.miles.arseethroughcalibration.CalibrationDrawing.CaliLine;
 import com.example.miles.arseethroughcalibration.CalibrationDrawing.CaliSquarePoints;
@@ -53,9 +54,8 @@ public class SimpleRenderer extends ARRenderer {
 
         // Apply the ARToolKit projection matrix
         gl.glMatrixMode(GL10.GL_PROJECTION);
-        gl.glLoadMatrixf(ARToolKit.getInstance().getProjectionMatrix(), 0);
         gl.glLoadIdentity();
-        GLU.gluPerspective(gl, MainActivity.viewAngle, rate, 0.1f, 10000.0f);
+        GLU.gluPerspective(gl, MainActivity.viewAngle, rate, 1.0f, 10000.0f);
 
         gl.glEnable(GL10.GL_CULL_FACE);
         gl.glShadeModel(GL10.GL_SMOOTH);
@@ -66,29 +66,49 @@ public class SimpleRenderer extends ARRenderer {
 
         // If the marker is visible, apply its transformation, and draw a cube
         if (ARToolKit.getInstance().queryMarkerVisible(markerID)) {
+            float[] arMatrix = ARToolKit.getInstance().queryMarkerTransformation(markerID);
 
             if (!MainActivity.calibrateTF) {
                 gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
                 caliSquarePoints.draw(gl);
-                caliLine.draw(gl);
-            }
-
-            if(!MainActivity.gotFM)
-            {
-                gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
-                caliSquarePoints.draw(gl);
-                caliLine.draw(gl);
-            }
-
-            if (MainActivity.calibrateTF) {
+            } else {
                 gl.glLoadMatrixf(MainActivity.resultMatrix, 0);
-                Log.d("ARS--", Arrays.toString(MainActivity.resultMatrix));
-                gl.glMultMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
+                gl.glMultMatrixf(arMatrix, 0);
                 caliSquarePointsDD.draw(gl);
-            } else if (MainActivity.firstMatrix != null) {
-                gl.glLoadMatrixf(MainActivity.firstMatrix, 0);
-                caliSquarePoints.draw(gl);
             }
+
+            switch (MainActivity.CALI_STATE) {
+                case 0: {
+                }
+                break;
+
+                case 1: {
+
+                }
+                break;
+
+                case 2: {
+                    gl.glLoadIdentity();
+                    gl.glTranslatef(0, 0, -200);
+                    caliSquarePoints.draw(gl);
+                }
+                break;
+
+                case 3: {
+                    gl.glLoadIdentity();
+                    gl.glTranslatef(0, 0, -300);
+                    caliSquarePoints.draw(gl);
+                }
+                break;
+
+                case 4: {
+                    gl.glLoadIdentity();
+                    gl.glTranslatef(0, 0, -400);
+                    caliSquarePoints.draw(gl);
+                }
+                break;
+            }
+
         }
 
     }

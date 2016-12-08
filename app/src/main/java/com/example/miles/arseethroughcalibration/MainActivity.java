@@ -14,6 +14,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.miles.arseethroughcalibration.HEC.VectorCal;
+
 import org.artoolkit.ar.base.ARActivity;
 import org.artoolkit.ar.base.ARToolKit;
 import org.artoolkit.ar.base.rendering.ARRenderer;
@@ -22,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Arrays;
 
 public class MainActivity extends ARActivity {
 
@@ -32,13 +35,14 @@ public class MainActivity extends ARActivity {
     private TextView textView;
 
     private boolean GL_TRANSLUCENT = true;
-    public int CALI_STATE = 0;                  //0, Angle Adjustment; 1, 1st Matrix; 2 2nd Matrix; 3, cali result;
+    public static int CALI_STATE = 0;                  //0, Angle Adjustment; 1, 1st Matrix; 2 2nd Matrix; 3, cali result;
 
     public static float[] firstMatrix;
     public static float[] secondMatrix;
+    public static float[] thirdMatrix;
     public static float[] resultMatrix;
 
-    public static float viewAngle = 9.2f;
+    public static float viewAngle = 10.3f;
     public static boolean calibrateTF = false;
     public static boolean gotFM = false;
 
@@ -60,16 +64,16 @@ public class MainActivity extends ARActivity {
         angleSeekBar.setVisibility(View.GONE);
 
         //****Full Screen****//
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        width = size.x;
-        height = (int) (width * 3.0f / 4.0f);
-
-        RelativeLayout.LayoutParams ll = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
-        ll.setMargins(0, (int) -((height - size.y) / 2.0f), 0, (int) -((height - size.y) / 2.0f));
-        Log.d("Para", " " + (int) -((height - size.y) / 2.0f) + " " +(int) -((height - size.y) / 2.0f));
-        aRParentLayout.setLayoutParams(ll);
+//        Display display = getWindowManager().getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        width = size.x;
+//        height = (int) (width * 3.0f / 4.0f);
+//
+//        RelativeLayout.LayoutParams ll = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+//        ll.setMargins(0, (int) -((height - size.y) / 2.0f), 0, (int) -((height - size.y) / 2.0f));
+//        Log.d("Para", " " + (int) -((height - size.y) / 2.0f) + " " + (int) -((height - size.y) / 2.0f));
+//        aRParentLayout.setLayoutParams(ll);
         //****Full Screen****//
 
         aRlayout.setOnClickListener(new View.OnClickListener() {
@@ -154,7 +158,6 @@ public class MainActivity extends ARActivity {
                 case 2: {
                     firstMatrix = new float[16];
                     firstMatrix = ARToolKit.getInstance().queryMarkerTransformation(SimpleRenderer.markerID);
-                    Log.e("get firstMatrix", "get: " + firstMatrix[0]);
                     textView.setText("步驟三:\n身體相對Marker略往右移\n將上一步驟紀錄的紅框位置\n和實體Marker對齊\n按下calibration按鈕");
                     gotFM = true;
 
@@ -162,20 +165,43 @@ public class MainActivity extends ARActivity {
                 break;
 
                 case 3: {
-                    float[] temp = new float[16];
+                    secondMatrix = new float[16];
                     secondMatrix = ARToolKit.getInstance().queryMarkerTransformation(SimpleRenderer.markerID);
-                    Log.e("get secondMatrix", "get: " + secondMatrix[0]);
-                    boolean aaa = Matrix.invertM(temp, 0, secondMatrix, 0);
-                    resultMatrix = new float[16];
-                    Matrix.multiplyMM(resultMatrix, 0, firstMatrix, 0, temp, 0);
-                    firstMatrix = new float[0];
-                    textView.setText("步驟四：\n校正成功與否 :" + aaa + "\n按下calibration按鈕繼續");
+                    textView.setText("步驟三:\n身體相對Marker略往右移\n將上一步驟紀錄的紅框位置\n和實體Marker對齊\n按下calibration按鈕");
+                    gotFM = true;
                 }
                 break;
 
                 case 4: {
+                    thirdMatrix = new float[16];
+                    thirdMatrix = ARToolKit.getInstance().queryMarkerTransformation(SimpleRenderer.markerID);
+                    textView.setText("步驟三:\n身體相對Marker略往右移\n將上一步驟紀錄的紅框位置\n和實體Marker對齊\n按下calibration按鈕");
+
+                    //calculate T
+                    float[] distance1 = new float[]{secondMatrix[12] - firstMatrix[12], secondMatrix[13] - firstMatrix[13], secondMatrix[14] - firstMatrix[14]};
+                    float[] distance2 = new float[]{thirdMatrix[12] - secondMatrix[12], thirdMatrix[13] - secondMatrix[13], thirdMatrix[14] - secondMatrix[14]};
+                    float d1 = VectorCal.magnitude(distance1);
+                    float d2 = VectorCal.magnitude(distance2);
+                    Log.d("Dist", d1 + " " + d2);
+                    VectorCal.normalize(distance1);
+                    VectorCal.normalize(distance2);
+
+                    float[] avg_dist = new float[]{(d1 + d2) * (distance1[0] + distance2[0]) / 2f, (d1 + d2) * (distance1[1] + distance2[1]) / 2f, (d1 + d2) * (distance1[2] + distance2[2]) / 2f};
+                    Log.d("Dist avg", -avg_dist[0] + " " + -avg_dist[1] + " " + -avg_dist[2]);
+                    Log.d("Dist avg", firstMatrix[12] + " " + firstMatrix[13] + " " + firstMatrix[14]);
+                    Log.d("Dist avg", thirdMatrix[12] + " " + thirdMatrix[13] + " " + thirdMatrix[14]);
+
+                    //calculate R
+                    resultMatrix = new float[16];
+                    Matrix.setIdentityM(resultMatrix, 0);
+                    float angle = VectorCal.getAngleDeg(new float[]{0, 0, -1}, avg_dist);
+                    float[] axis = VectorCal.cross(new float[]{0, 0, -1}, avg_dist);
+                    Matrix.rotateM(resultMatrix, 0, -angle, axis[0], axis[1], axis[2]);
+                    Matrix.translateM(resultMatrix, 0, -firstMatrix[12] + avg_dist[0], -firstMatrix[13] + avg_dist[1], -firstMatrix[14] + avg_dist[2]);
+
+                    Log.d("Dist tran", angle + " " + Arrays.toString(axis));
+                    Log.d("Dist tran", Arrays.toString(resultMatrix));
                     calibrateTF = true;
-                    textView.setText("步驟五：可以存檔\n或按下calibration按鈕重新校正" + "\n");
                 }
                 break;
             }
@@ -200,7 +226,7 @@ public class MainActivity extends ARActivity {
 
                 str = str + viewAngle + "\n";
                 for (int i = 0; i < 16; i++) {
-                    str += (resultMatrix[i] + "\t");
+                    str += (thirdMatrix[i] + "\t");
                 }
 
                 FileOutputStream fout = new FileOutputStream(file);
