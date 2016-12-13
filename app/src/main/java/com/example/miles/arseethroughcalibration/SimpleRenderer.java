@@ -24,7 +24,7 @@ public class SimpleRenderer extends ARRenderer {
     private CaliLine caliLine = new CaliLine();
     private CaliSquarePoints caliSquarePoints = new CaliSquarePoints();
     private CaliSquarePointsDD caliSquarePointsDD = new CaliSquarePointsDD();
-    private float rate;
+    public static float rate;
 
     /**
      * Markers can be configured here.
@@ -64,6 +64,7 @@ public class SimpleRenderer extends ARRenderer {
 
         gl.glMatrixMode(GL10.GL_MODELVIEW);
 
+        gl.glLineWidth(5);
         // If the marker is visible, apply its transformation, and draw a cube
         if (ARToolKit.getInstance().queryMarkerVisible(markerID)) {
             float[] arMatrix = ARToolKit.getInstance().queryMarkerTransformation(markerID);

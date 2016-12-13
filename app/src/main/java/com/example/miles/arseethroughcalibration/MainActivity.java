@@ -213,20 +213,20 @@ public class MainActivity extends ARActivity {
         if (calibrateTF) {
             try {
                 int times = 0;
-                File file = new File("/sdcard/HECmatrix.txt");
+                File file = new File("/sdcard/VSCM.txt");
                 boolean aa = file.createNewFile();
                 while (!aa) {
                     times++;
-                    file = new File("/sdcard/HECmatrix_" + times + ".txt");
+                    file = new File("/sdcard/VSCM" + times + ".txt");
                     aa = file.createNewFile();
                 }
                 Toast.makeText(caliButton.getContext(), "File Created." + times, Toast.LENGTH_SHORT).show();
 
                 String str = "";
 
-                str = str + viewAngle + "\n";
+                str = str + viewAngle + "\n" + SimpleRenderer.rate + "\n";
                 for (int i = 0; i < 16; i++) {
-                    str += (thirdMatrix[i] + "\t");
+                    str += (resultMatrix[i] + "\t");
                 }
 
                 FileOutputStream fout = new FileOutputStream(file);
