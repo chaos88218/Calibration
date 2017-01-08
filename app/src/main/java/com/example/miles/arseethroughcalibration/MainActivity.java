@@ -151,14 +151,14 @@ public class MainActivity extends ARActivity {
 
                 case 1: {
                     angleSeekBar.setVisibility(View.GONE);
-                    textView.setText("步驟二:\n調整畫面中紅方框位置大小\n使紅方框範圍充滿整個螢幕\n按下calibration按鈕紀錄位置");
+                    textView.setText("步驟二:\n將紅框位置\n和實體Marker對齊\n按下calibration按鈕");
                 }
                 break;
 
                 case 2: {
                     firstMatrix = new float[16];
                     firstMatrix = ARToolKit.getInstance().queryMarkerTransformation(SimpleRenderer.markerID);
-                    textView.setText("步驟三:\n身體相對Marker略往右移\n將上一步驟紀錄的紅框位置\n和實體Marker對齊\n按下calibration按鈕");
+                    textView.setText("步驟三:\n將紅框位置\n和實體Marker對齊\n按下calibration按鈕");
                     gotFM = true;
 
                 }
@@ -167,7 +167,7 @@ public class MainActivity extends ARActivity {
                 case 3: {
                     secondMatrix = new float[16];
                     secondMatrix = ARToolKit.getInstance().queryMarkerTransformation(SimpleRenderer.markerID);
-                    textView.setText("步驟三:\n身體相對Marker略往右移\n將上一步驟紀錄的紅框位置\n和實體Marker對齊\n按下calibration按鈕");
+                    textView.setText("步驟四:\n將紅框位置\n和實體Marker對齊\n按下calibration按鈕");
                     gotFM = true;
                 }
                 break;
@@ -175,7 +175,7 @@ public class MainActivity extends ARActivity {
                 case 4: {
                     thirdMatrix = new float[16];
                     thirdMatrix = ARToolKit.getInstance().queryMarkerTransformation(SimpleRenderer.markerID);
-                    textView.setText("步驟三:\n身體相對Marker略往右移\n將上一步驟紀錄的紅框位置\n和實體Marker對齊\n按下calibration按鈕");
+                    textView.setText("步驟五:\n校正完成\n結果顯示於螢幕上");
 
                     //calculate T
                     float[] distance1 = new float[]{secondMatrix[12] - firstMatrix[12], secondMatrix[13] - firstMatrix[13], secondMatrix[14] - firstMatrix[14]};
