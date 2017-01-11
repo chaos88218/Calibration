@@ -145,7 +145,7 @@ public class MainActivity extends ARActivity {
                     gotFM = false;
                     calibrateTF = false;
                     angleSeekBar.setVisibility(View.VISIBLE);
-                    textView.setText("步驟一:\n拉動調整角度\n使兩黃線與兩黑線\n兩兩直線距離一致\n完成按下calibration按鈕");
+                    textView.setText("步驟一:\n拉動調整角度\n使現實Marker與虛擬Marker大小一致\n完成按下calibration按鈕");
                 }
                 break;
 
